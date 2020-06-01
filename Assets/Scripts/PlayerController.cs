@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.Events;
 
 public class PlayerController : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class PlayerController : MonoBehaviour
     public PlayerModel baseModel;
     public PlayerModelDataBase dataBase;
     public PlayerStatsController stats;
+    public AbilityValueCharacterizer characterizer;
 
     public TMP_InputField avgText;
     public TMP_InputField homerunText;
@@ -20,8 +22,20 @@ public class PlayerController : MonoBehaviour
     private float homerun;
     private float discipline;
 
+    #region event
+    public delegate void OnPlayerAbilityValueChange(float average, float homerun,float discipline);
+    public event OnPlayerAbilityValueChange onPlayerAbilityValueChange;
+
+    //public delegate void OnPlayerModelLoaded();
+    //public event OnPlayerModelLoaded onPlayerModelLoaded;
+    #endregion
+
+    public UnityEvent onPlayerModelLoaded;
+
+
     void Start()
     {
+        onPlayerAbilityValueChange += characterizer.Refresh;
         GeneratePlayer();
     }
 
@@ -40,7 +54,6 @@ public class PlayerController : MonoBehaviour
             LoadModel(defaultModel);
         }
 
-        ApplyModelToText();
     }
 
     public void ApplyTextToModel()
@@ -48,6 +61,8 @@ public class PlayerController : MonoBehaviour
         average = float.Parse(avgText.text);
         homerun = float.Parse(homerunText.text);
         discipline = float.Parse(disciplineText.text);
+
+        onPlayerAbilityValueChange?.Invoke(average, homerun, discipline);
     }
 
     void ApplyModelToText()
@@ -57,11 +72,16 @@ public class PlayerController : MonoBehaviour
         disciplineText.text = discipline.ToString("n3");
     }
 
-    void LoadModel(PlayerModel model)
+    public void LoadModel(PlayerModel model)
     {
         average = model.average;
         homerun = model.homerun;
         discipline = model.discipline;
+        ApplyModelToText();
+
+        onPlayerAbilityValueChange?.Invoke(average, homerun, discipline);
+
+        onPlayerModelLoaded?.Invoke();
     }
 
     public void Batting(ref int outs, ref int runs, ref bool[] runners)
@@ -69,7 +89,7 @@ public class PlayerController : MonoBehaviour
         if (Random.value < discipline)
         {
             ManageRunner(ref runners,ref runs, 1);
-            if(transform.name=="Player")Debug.Log(this.transform.name+": BB");
+            Debug.Log(this.transform.name+": BB");
             stats.ChangeBB(1);
         }
         else
@@ -79,7 +99,7 @@ public class PlayerController : MonoBehaviour
                 if (Random.value < homerun)
                 {
                     ManageRunner(ref runners, ref runs, 4);
-                    if(transform.name=="Player")Debug.Log(this.transform.name+": HR");
+                    Debug.Log(this.transform.name+": HR");
                     stats.ChangeHR(1);
 
 
@@ -87,7 +107,7 @@ public class PlayerController : MonoBehaviour
                 else
                 {
                     ManageRunner(ref runners, ref runs, 1);
-                    if(transform.name=="Player")Debug.Log(this.transform.name+": single");
+                    Debug.Log(this.transform.name+": single");
 
                 }
                 stats.ChangeH(1);
@@ -95,7 +115,7 @@ public class PlayerController : MonoBehaviour
             else
             {
                 outs++;
-                if(transform.name=="Player")Debug.Log(this.transform.name+": out");
+                Debug.Log(this.transform.name+": out");
 
             }
         }

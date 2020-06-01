@@ -6,18 +6,30 @@ using TMPro;
 public class GameManager : MonoBehaviour
 {
     public MatchManager matchManager;
-    public TextMeshProUGUI result;
+    //public TextMeshProUGUI result;
     public TextMeshProUGUI avgScore;
-    public int matches;
+
+
+    public IntVariable money;
+    public IntVariable startingMoney;
+    public IntVariable matches;
+    public FloatVariable fame;
+
+    public int consecutiveMatches;
     public bool reset;
 
     private int totalScore;
+    private List<int> scoreHistory;
+    //private int totalEnemyScore;
 
     private void Awake()
     {
-        Debug.unityLogger.logEnabled = false;
+        //Debug.unityLogger.logEnabled = false;
 
-        result.text = "";
+        //result.text = "";
+        scoreHistory = new List<int>();
+        money.SetValue(startingMoney);
+        matches.SetValue(0);
     }
 
     // Start is called before the first frame update
@@ -34,7 +46,7 @@ public class GameManager : MonoBehaviour
 
     IEnumerator Simulate()
     {
-        result.text = "";
+        //result.text = "";
         totalScore = 0;
 
         matchManager.ConfirmOrder();
@@ -47,14 +59,21 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        for (int i = 0; i < matches; i++)
+        for (int i = 0; i < consecutiveMatches; i++)
         {
-            totalScore += matchManager.ExcuteMatch();
-            yield return null;
-            //yield return new WaitForSeconds(0.3f);
+            //innning by innning version
+            StartCoroutine(matchManager.ExcuteMatch());
+            scoreHistory.Add(matchManager.totalRuns);
+
+
+            //instant version
+            //scoreHistory.Add(matchManager.ExcuteMatch());
+            //yield return null;
+            yield return new WaitForSeconds(0.3f);
+
         }
 
-        avgScore.text = ((float)totalScore / matches).ToString();
+        //avgScore.text = ((float)totalScore / matches).ToString();
     }
 
     public void SimulateWrapper()

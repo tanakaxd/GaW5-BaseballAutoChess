@@ -21,6 +21,8 @@ public class PlayerStatsController : MonoBehaviour
         HR = 0;
         RBI = 0;
         BB = 0;
+
+        Refresh();
     }
 
     public void Refresh()
