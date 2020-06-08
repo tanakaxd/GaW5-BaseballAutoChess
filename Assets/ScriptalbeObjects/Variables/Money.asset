@@ -9,11 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cad07c6d9f0a54e44a0f3b08fc4837ae, type: 3}
+  m_Script: {fileID: 11500000, guid: 4f94b0c7ace941647a76b9c1165ad0f6, type: 3}
   m_Name: Money
   m_EditorClassIdentifier: 
   DeveloperDescription: 
-  Value: 11
+  Value: 0
   OnValueChange:
     m_PersistentCalls:
       m_Calls:

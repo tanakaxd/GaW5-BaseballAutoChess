@@ -48,6 +48,8 @@ public class AbilityValueCharacterizer : MonoBehaviour
 
     public void Refresh(float average,float homerun,float disc)
     {
+        //Debug.Log("refresh called");
+
         /*
         int avg = CentiNormalizer(average, maxAVG);
         Characterizer(avg,avgCharacter);

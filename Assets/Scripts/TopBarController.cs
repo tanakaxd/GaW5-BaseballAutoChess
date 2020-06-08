@@ -7,12 +7,14 @@ using TMPro;
 public class TopBarController : MonoBehaviour
 {
     public TextMeshProUGUI matchesText, averageRunText, fameText, moneyText;
-    public IntVariable matches, money;
-    public FloatVariable fame;
+    public IntVariable matches;
+    public FloatVariable fame, money;
     // Start is called before the first frame update
     void Start()
     {
-        
+        RefreshFame();
+        RefreshMatch();
+        RefreshMoney();
     }
 
     // Update is called once per frame
@@ -23,11 +25,22 @@ public class TopBarController : MonoBehaviour
 
     public void RefreshMoney()
     {
-        moneyText.text = money.Value.ToString();
+        moneyText.text = money.Value.ToString("n0");
+        Debug.Log("money");
     }
 
     public void RefreshFame()
     {
-        fameText.text = fame.Value.ToString();
+        fameText.text = fame.Value.ToString("n0");
+        Debug.Log("fame");
+
+    }
+
+    public void RefreshMatch()
+    {
+        matchesText.text = matches.Value.ToString();
+        Debug.Log("match");
+
+
     }
 }

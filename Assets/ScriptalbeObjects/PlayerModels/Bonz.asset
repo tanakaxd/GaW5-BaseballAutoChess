@@ -17,3 +17,6 @@ MonoBehaviour:
   discipline: 0.3
   grade: 5
   ID: 500
+  num: 5
+  school: 1
+  place: 5

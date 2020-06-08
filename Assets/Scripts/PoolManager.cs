@@ -12,7 +12,7 @@ public class PoolManager : MonoBehaviour
 
     private void Awake()
     {
-        for (int i = 0; i < 6; i++)
+        for (int i = 1; i < 6; i++)
         {
             for (int j = 0; j < amounts[i]; j++)
             {
@@ -25,9 +25,11 @@ public class PoolManager : MonoBehaviour
         
     }
 
+
+    //単にdatabaseから返している。poolを作っている意味は今のところなし
     public PlayerModel GetRandomModel()
     {
-        int grade = (int)Mathf.Clamp((float)MyRandom.RandomGaussianUnity(fame.Value, 1),0,5);
+        int grade = (int)Mathf.Clamp((float)MyRandom.RandomGaussianUnity(fame.Value/10, 0.5f),1,5);
         return database.GetRandomModel(grade);
 
     }

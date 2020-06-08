@@ -4,15 +4,19 @@ using UnityEngine;
 
 public class EnemyOrderController : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    private EnemyPlayerController[] enemyOrder;
+
+    private void Awake()
     {
-        
+        enemyOrder = GetComponentsInChildren<EnemyPlayerController>();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void RenewEnemy()
     {
-        
+        foreach(EnemyPlayerController enemy in enemyOrder)
+        {
+            enemy.GeneratePlayer();
+        }
     }
+
 }

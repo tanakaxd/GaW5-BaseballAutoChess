@@ -502,8 +502,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 254.8, y: 33.1}
+  m_AnchoredPosition: {x: -46.89, y: 0}
+  m_SizeDelta: {x: 161.01, y: 33.1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4230763052978159044
 CanvasRenderer:
@@ -570,7 +570,6 @@ MonoBehaviour:
   defaultModel: {fileID: 11400000, guid: 6279c9683433e274a948512c840b7b21, type: 2}
   baseModel: {fileID: 11400000, guid: 6b3bdfc40ce9c6041aac2a9e44f8f344, type: 2}
   dataBase: {fileID: 11400000, guid: 887faea282cfa7b4e99ef34d453a4200, type: 2}
-  stats: {fileID: 0}
   characterizer: {fileID: 9097956167838583593}
   sigmaAVG:
     UseConstant: 0

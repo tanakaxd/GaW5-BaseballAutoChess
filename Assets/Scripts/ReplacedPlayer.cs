@@ -1,38 +1,71 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
 public class ReplacedPlayer : MonoBehaviour, IDropHandler
 {
     //public PlayerModelDataBase dataBase;
+    public UnityEvent onOrderChanged;
 
     public void OnDrop(PointerEventData eventData)
     {
-        if (eventData.pointerDrag.transform.CompareTag("Player"))
+        Transform draggedCard = eventData.pointerDrag.transform;
+
+
+        if (draggedCard.CompareTag("Player"))//orderの入れ替え
         {
-            int draggedIndex = eventData.pointerDrag.transform.GetSiblingIndex();
+            PlayerController draggedPlayer = draggedCard.GetComponent<PlayerController>();
+            PlayerController targetPlayer = transform.GetComponent<PlayerController>();
 
-            int replacedIndex = transform.GetSiblingIndex();
+            if (draggedPlayer.ID == targetPlayer.ID)
+            {
+                if (targetPlayer.level >= 3)
+                    return;
+                //
+                transform.GetComponent<PlayerController>().LevelUp();
 
-            Debug.Log(transform.name);
-            Debug.Log(eventData.pointerDrag.transform.name);
+                //ドラッグされた方は空にする＝デフォルトのロード
 
-            transform.SetSiblingIndex(draggedIndex);
-            eventData.pointerDrag.transform.SetSiblingIndex(replacedIndex);
+                draggedPlayer.LoadModel(draggedPlayer.defaultModel);
+            }
+            else
+            {
+                int draggedIndex = draggedCard.GetSiblingIndex();
+
+                int replacedIndex = transform.GetSiblingIndex();
+
+                Debug.Log(transform.name);
+                Debug.Log(draggedCard.name);
+
+                transform.SetSiblingIndex(draggedIndex);
+                draggedCard.SetSiblingIndex(replacedIndex);
+
+                onOrderChanged?.Invoke();
+            }
         }
-        else if (eventData.pointerDrag.transform.CompareTag("Drawn"))
+        else if (draggedCard.CompareTag("Drawn"))//新しいメンツの加入
         {
-            DrawnPlayerController newPlayer = eventData.pointerDrag.transform.GetComponent<DrawnPlayerController>();
+            DrawnPlayerController newPlayer = draggedCard.GetComponent<DrawnPlayerController>();
             PlayerController replacedPlayer = transform.GetComponent<PlayerController>();
 
-            replacedPlayer.LoadModel(replacedPlayer.dataBase.GetModel(newPlayer.ID));
-            newPlayer.transform.gameObject.SetActive(false);
+            if (newPlayer.ID == replacedPlayer.ID)
+            {
+                if (replacedPlayer.level >= 3)
+                    return;
 
-            
+                replacedPlayer.LevelUp();
+                newPlayer.transform.gameObject.SetActive(false);
+            }
+            else
+            {
+
+                replacedPlayer.LoadModel(replacedPlayer.dataBase.GetModel(newPlayer.ID));
+                newPlayer.transform.gameObject.SetActive(false);
+
+                onOrderChanged?.Invoke();
+
+            }
+
         }
-        
     }
-
- 
 }

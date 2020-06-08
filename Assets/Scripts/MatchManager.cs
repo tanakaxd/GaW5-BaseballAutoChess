@@ -5,31 +5,32 @@ using TMPro;
 
 public class MatchManager : MonoBehaviour
 {
-    public TextMeshProUGUI result;
-    public Transform orderTransform;
-    public Transform enemyOrderTransform;
-    public List<TextMeshProUGUI> topScores;
-    public TextMeshProUGUI topTotalScore;
-    public List<TextMeshProUGUI> bottomScores;
-    public TextMeshProUGUI bottomTotalScore;
-    public IntVariable money;
+    public TextMeshProUGUI m_result;
+    
+    public List<TextMeshProUGUI> m_topScores;
+    public TextMeshProUGUI m_topTotalScore;
+    public List<TextMeshProUGUI> m_bottomScores;
+    public TextMeshProUGUI m_bottomTotalScore;
+    public FloatVariable m_money;
+    public FloatVariable m_fame;
+
+    public OrderManager m_orderManager;
 
 
-    [HideInInspector]public PlayerController[] order;
-    [HideInInspector]public EnemyPlayerController[] enemyOrder;
 
-    private int currentBat;
-    private int currentEnemyBat;
-    [HideInInspector] public int totalRuns;
-    private int totalEnemyRuns;
 
-    private int runs;
-    private int outs;
-    private int innings;
-    private bool[] runnersOnBases;
+    [HideInInspector] public int currentBat;
+    [HideInInspector]public  int currentEnemyBat;
+    [HideInInspector]public  int totalRuns;
+    [HideInInspector]public  int totalEnemyRuns;
 
-    private bool isTop;
-    private bool isPlayerTop = false;
+    [HideInInspector]public  int runs;
+    [HideInInspector]public  int outs;
+    [HideInInspector]public  int innings;
+    [HideInInspector]public  bool[] runnersOnBases;
+
+    [HideInInspector]public  bool isTop;
+    [HideInInspector]public  bool isPlayerTop = false;
 
     void InitGame()
     {
@@ -42,22 +43,18 @@ public class MatchManager : MonoBehaviour
         innings = 1;
         isTop = true;
         runnersOnBases = new bool[3] { false, false, false };
+        m_result.text = "";
 
         for (int i = 0; i < 9; i++)
         {
-            topScores[i].text = "";
-            bottomScores[i].text = "";
+            m_topScores[i].text = "";
+            m_bottomScores[i].text = "";
         }
-        topTotalScore.text = "0";
-        bottomTotalScore.text = "0";
+        m_topTotalScore.text = "0";
+        m_bottomTotalScore.text = "0";
     }
 
-    public void ConfirmOrder()
-    {
-        order = orderTransform.GetComponentsInChildren<PlayerController>();
-        //Debug.Log(order.Length);
-        enemyOrder= enemyOrderTransform.GetComponentsInChildren<EnemyPlayerController>();
-    }
+
 
     void BeginInning()
     {
@@ -68,12 +65,12 @@ public class MatchManager : MonoBehaviour
         {
             if (isPlayerTop==isTop)
             {
-                order[currentBat].Batting(ref outs,ref runs, ref runnersOnBases);
+                m_orderManager.order[currentBat].Batting(this);
                 CycleOrder(true);
             }
             else
             {
-                enemyOrder[currentEnemyBat].Batting(ref outs, ref runs, ref runnersOnBases);
+                m_orderManager.enemyOrder[currentEnemyBat].Batting(ref outs, ref runs, ref runnersOnBases);
                 CycleOrder(false);
             }
         }
@@ -125,28 +122,46 @@ public class MatchManager : MonoBehaviour
     {
         if (isTop)
         {
-            topScores[innings - 1].text = runs.ToString();
-            topTotalScore.text = (isPlayerTop ? totalRuns : totalEnemyRuns).ToString();
+            m_topScores[innings - 1].text = runs.ToString();
+            m_topTotalScore.text = (isPlayerTop ? totalRuns : totalEnemyRuns).ToString();
 
         }
         else
         {
-            bottomScores[innings - 1].text = runs.ToString();
-            bottomTotalScore.text = (isPlayerTop ? totalEnemyRuns : totalRuns).ToString();
+            m_bottomScores[innings - 1].text = runs.ToString();
+            m_bottomTotalScore.text = (isPlayerTop ? totalEnemyRuns : totalRuns).ToString();
         }
     }
 
 
     void EndMatch()
     {
-        result.text = totalRuns > totalEnemyRuns? "WIN":"LOST";
-
-        for (int i = 0; i < order.Length; i++)
+        
+        if(totalRuns > totalEnemyRuns)
         {
-            order[i].stats.Refresh();
+            m_result.text = "WIN!"; 
+            m_money.ApplyChange(m_fame.Value);
+            m_fame.ApplyChange(1);
+
+        }else if(totalRuns == totalEnemyRuns)
+        {
+            m_result.text = "DRAW";
+            m_money.ApplyChange(m_fame.Value);
+        }
+        else
+        {
+            m_result.text ="LOST";
+            m_money.ApplyChange(m_fame.Value);
+            m_fame.ApplyChange(-1);
         }
 
-        money.ApplyChange(1);
+
+        for (int i = 0; i < m_orderManager.order.Length; i++)
+        {
+            m_orderManager.order[i].stats.Refresh();
+        }
+
+        
     }
 
     public IEnumerator ExcuteMatch()

@@ -6,14 +6,19 @@ using TMPro;
 public class GameManager : MonoBehaviour
 {
     public MatchManager matchManager;
+    public EnemyOrderController enemyOrderController;
+
+    //public Transform enemyOrder;
     //public TextMeshProUGUI result;
     public TextMeshProUGUI avgScore;
+    public GameObject matchPanel;
 
 
-    public IntVariable money;
-    public IntVariable startingMoney;
     public IntVariable matches;
+    public FloatVariable money;
+    public FloatVariable startingMoney;
     public FloatVariable fame;
+    public FloatVariable startingFame;
 
     public int consecutiveMatches;
     public bool reset;
@@ -28,34 +33,36 @@ public class GameManager : MonoBehaviour
 
         //result.text = "";
         scoreHistory = new List<int>();
+
+        //awakeだとdelegate登録より先にinvokeされてしまう
+        //awakeではなくstartでやればとりあえずできるが、今度はその変数を必要とする初期化処理がさらに遅れることになる
         money.SetValue(startingMoney);
+        fame.SetValue(startingFame);
         matches.SetValue(0);
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    IEnumerator Simulate()
-    {
-        //result.text = "";
         totalScore = 0;
+    }
 
-        matchManager.ConfirmOrder();
+    public void SetActiveDrawPanel()
+    {
+
+    }
+
+    public void Simulate()
+    {
+        matchPanel.gameObject.SetActive(true);
+
+        enemyOrderController.RenewEnemy();
+
+        //result.text = "";
+        //totalScore = 0;
+
+        matchManager.m_orderManager.ConfirmOrder();
 
         if (reset)
         {
-            for (int i = 0; i < matchManager.order.Length; i++)
+            for (int i = 0; i < matchManager.m_orderManager.order.Length; i++)
             {
-                matchManager.order[i].stats.Init();
+                matchManager.m_orderManager.order[i].stats.Init();
             }
         }
 
@@ -63,21 +70,17 @@ public class GameManager : MonoBehaviour
         {
             //innning by innning version
             StartCoroutine(matchManager.ExcuteMatch());
-            scoreHistory.Add(matchManager.totalRuns);
+            //scoreHistory.Add(matchManager.totalRuns);
+            totalScore += matchManager.totalRuns;
 
 
             //instant version
             //scoreHistory.Add(matchManager.ExcuteMatch());
-            //yield return null;
-            yield return new WaitForSeconds(0.3f);
-
         }
 
-        //avgScore.text = ((float)totalScore / matches).ToString();
+        matches.ApplyChange(consecutiveMatches);
+
+        avgScore.text = ((float)totalScore / matches.Value).ToString("n2");
     }
 
-    public void SimulateWrapper()
-    {
-        StartCoroutine(Simulate());
-    }
 }

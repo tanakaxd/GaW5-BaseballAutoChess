@@ -13,7 +13,7 @@ public class PlayerModelDataBase : ScriptableObject
         return dataBase[Random.Range(0, dataBase.Count)];
     }
 
-    public PlayerModel GetRandomModel(int highestGrade)
+    public PlayerModel GetRandomModelLower(int highestGrade)
     {
         PlayerModel model=null;
         int count = 0;
@@ -30,6 +30,14 @@ public class PlayerModelDataBase : ScriptableObject
         }
         return model;
     }
+
+    public PlayerModel GetRandomModel(int grade)
+    {
+        List<PlayerModel> candidates = dataBase.Where(model => model.grade == grade).ToList();
+        return candidates[Random.Range(0, candidates.Count)];
+    }
+
+
 
     public int GetRandomID(int grade)
     {

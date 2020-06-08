@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -11,16 +12,32 @@ public class PlayerController : MonoBehaviour
     public PlayerModelDataBase dataBase;
     public PlayerStatsController stats;
     public AbilityValueCharacterizer characterizer;
-
-    public TMP_InputField avgText;
-    public TMP_InputField homerunText;
-    public TMP_InputField disciplineText;
+    public PlayerDisplay display;
+    public PlayerBatting batting;
 
     public bool useRandomModel;
 
     private float average;
     private float homerun;
     private float discipline;
+
+    [HideInInspector] public float modifiedAverage;
+    [HideInInspector] public float modifiedHomerun;
+    [HideInInspector] public float modifiedDiscipline;
+
+    [HideInInspector]public TypeOfSchool school;
+    [HideInInspector]public int num;
+    [HideInInspector]public TypeOfPlace place;
+    [HideInInspector] public int ID;
+    [HideInInspector] public int grade;
+    [HideInInspector] public string name;
+
+    [HideInInspector] public int level;
+
+    private bool isSchoolActive;
+    //private bool isSchoolSuperActive;
+    private bool isPlaceActive;
+
 
     #region event
     public delegate void OnPlayerAbilityValueChange(float average, float homerun,float discipline);
@@ -36,6 +53,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         onPlayerAbilityValueChange += characterizer.Refresh;
+        //onPlayerAbilityValueChange += display.UpdateText;
         GeneratePlayer();
     }
 
@@ -56,6 +74,7 @@ public class PlayerController : MonoBehaviour
 
     }
 
+    /*
     public void ApplyTextToModel()
     {
         average = float.Parse(avgText.text);
@@ -64,78 +83,134 @@ public class PlayerController : MonoBehaviour
 
         onPlayerAbilityValueChange?.Invoke(average, homerun, discipline);
     }
+    */
 
-    void ApplyModelToText()
-    {
-        avgText.text = average.ToString("n3");
-        homerunText.text = homerun.ToString("n3");
-        disciplineText.text = discipline.ToString("n3");
-    }
+
 
     public void LoadModel(PlayerModel model)
     {
-        average = model.average;
-        homerun = model.homerun;
-        discipline = model.discipline;
-        ApplyModelToText();
+        average = model.GetAverage();
+        homerun = model.GetHomerun();
+        discipline = model.GetDisc();
+        num = model.num;
+        school = model.school;
+        place = model.place;
+        ID = model.ID;
+        grade = model.grade;
+        name = model.name;
+
+        level = 1;
+
+        modifiedAverage = average;
+        modifiedHomerun = homerun;
+        modifiedDiscipline = discipline;
+
+        display.UpdateText(average,homerun,discipline,grade,name);
+        display.UpdateAttribute(school, num, place);
+        display.UpdateLevel(level);
 
         onPlayerAbilityValueChange?.Invoke(average, homerun, discipline);
-
         onPlayerModelLoaded?.Invoke();
     }
 
-    public void Batting(ref int outs, ref int runs, ref bool[] runners)
+    private void SetEntityAbility(string variableName, float value)
     {
-        if (Random.value < discipline)
+        switch (variableName)
         {
-            ManageRunner(ref runners,ref runs, 1);
-            Debug.Log(this.transform.name+": BB");
-            stats.ChangeBB(1);
+            case "average":
+                average = value;
+                break;
+            case "homerun":
+                homerun = value;
+                break;
+            case "discipline":
+                discipline = value;
+                break;
+            default:
+                break;
         }
-        else
-        {
-            if (Random.value < average)
-            {
-                if (Random.value < homerun)
-                {
-                    ManageRunner(ref runners, ref runs, 4);
-                    Debug.Log(this.transform.name+": HR");
-                    stats.ChangeHR(1);
-
-
-                }
-                else
-                {
-                    ManageRunner(ref runners, ref runs, 1);
-                    Debug.Log(this.transform.name+": single");
-
-                }
-                stats.ChangeH(1);
-            }
-            else
-            {
-                outs++;
-                Debug.Log(this.transform.name+": out");
-
-            }
-        }
-        stats.ChangePA(1);
+        display.UpdateText(average, homerun, discipline, grade, name);
+        onPlayerAbilityValueChange?.Invoke(average, homerun, discipline);
     }
 
-    void ManageRunner(ref bool[] runners, ref int runs, int typeOfHit)
+    public void SetAuraForSchool(Color color)
     {
-        for (int i = 0; i < typeOfHit; i++)
-        {
-            if (runners[2] == true)
-            {
-                runs++;
-                stats.ChangeRBI(1);
+        display.schoolEffect.color = color;
+    }
 
-            }
-            runners[2] = runners[1];
-            runners[1] = runners[0];
-            runners[0] = i == 0 ? true : false;
+    public void SetAuraForPlace(Color color)
+    {
+        display.placeEffect.color = color;
+    }
+
+    public void SetSchoolActive(bool active)
+    {
+        isSchoolActive = active;
+    }
+    public void SetPlaceActive(bool active)
+    {
+        isPlaceActive = active;
+    }
+
+    public void UpdateSchoolModifier()
+    {
+        //Debug.Log("UpdateSchoolModifier called");
+        switch (school)
+        {
+            case TypeOfSchool.red:
+                modifiedHomerun = isSchoolActive ? homerun * 1.1f : homerun;
+                break;
+            case TypeOfSchool.blue:
+                modifiedAverage = isSchoolActive ? average * 1.1f : average;
+                break;
+            case TypeOfSchool.green:
+                modifiedDiscipline = isSchoolActive ? discipline * 1.1f : discipline;
+                break;
+            default:
+                break;
+
+
         }
+    }
+
+    public void LevelUp()
+    {
+        if (level >= 3)
+            return;
+
+        level++;
+        UpdateLevelModifier();
+        display.UpdateLevel(level);
+        UpdateSchoolModifier();
+        Debug.Log(level);
+
+        onPlayerAbilityValueChange?.Invoke(average, homerun, discipline);
+    }
+    private void UpdateLevelModifier()
+    {
+        average *= GetLevelModifier();
+        homerun *= GetLevelModifier();
+        discipline *= GetLevelModifier();
+    }
+
+    private float GetLevelModifier()
+    {
+        switch (level)
+        {
+            case 1:
+                return 1;
+            case 2:
+                return 1.5f;
+            case 3:
+                return 2;
+            default:
+                return 1;
+        }
+    }
+
+public void Batting(MatchManager matchManager)
+    {
+        batting.Batting(matchManager, this);
     }
 
     /*

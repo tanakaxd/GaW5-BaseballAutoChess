@@ -32,11 +32,11 @@ public class EnemyPlayerController : MonoBehaviour
         GeneratePlayer();
     }
 
-    void GeneratePlayer()
+    public void GeneratePlayer()
     {
         if (useRandomlyGenerated)
         {
-            GenerateRandom(dataBase.GetRandomModel((int)fame.Value));
+            GenerateRandom(dataBase.GetRandomModelLower((int)Mathf.Clamp(fame.Value/10,1f,5f)));
         }
         else if (useRandomModel)
         {
@@ -73,18 +73,18 @@ public class EnemyPlayerController : MonoBehaviour
 
     void LoadModel(PlayerModel model)
     {
-        average = model.average;
-        homerun = model.homerun;
-        discipline = model.discipline;
+        average = model.GetAverage();
+        homerun = model.GetHomerun();
+        discipline = model.GetDisc();
 
         onPlayerAbilityValueChange?.Invoke(average, homerun, discipline);
     }
 
     void GenerateRandom(PlayerModel model)
     {
-        average = (float)MyRandom.RandomGaussianUnity(model.average,sigmaAVG.Value);
-        homerun = (float)MyRandom.RandomGaussianUnity(model.homerun, sigmaHR);
-        discipline = (float)MyRandom.RandomGaussianUnity(model.discipline, sigmaDiscipline);
+        average = (float)MyRandom.RandomGaussianUnity(model.GetAverage(),sigmaAVG.Value);
+        homerun = (float)MyRandom.RandomGaussianUnity(model.GetHomerun(), sigmaHR);
+        discipline = (float)MyRandom.RandomGaussianUnity(model.GetDisc(), sigmaDiscipline);
 
         onPlayerAbilityValueChange?.Invoke(average, homerun, discipline);
     }
@@ -94,7 +94,7 @@ public class EnemyPlayerController : MonoBehaviour
         if (Random.value < discipline)
         {
             ManageRunner(ref runners, ref runs, 1);
-            Debug.Log(this.transform.name + ": BB");
+            //Debug.Log(this.transform.name + ": BB");
             //stats.ChangeBB(1);
         }
         else
@@ -104,7 +104,7 @@ public class EnemyPlayerController : MonoBehaviour
                 if (Random.value < homerun)
                 {
                     ManageRunner(ref runners, ref runs, 4);
-                    Debug.Log(this.transform.name + ": HR");
+                    //Debug.Log(this.transform.name + ": HR");
                     //stats.ChangeHR(1);
 
 
@@ -112,7 +112,7 @@ public class EnemyPlayerController : MonoBehaviour
                 else
                 {
                     ManageRunner(ref runners, ref runs, 1);
-                    Debug.Log(this.transform.name + ": single");
+                    //Debug.Log(this.transform.name + ": single");
 
                 }
                 //stats.ChangeH(1);
@@ -120,7 +120,7 @@ public class EnemyPlayerController : MonoBehaviour
             else
             {
                 outs++;
-                Debug.Log(this.transform.name + ": out");
+                //Debug.Log(this.transform.name + ": out");
 
             }
         }
