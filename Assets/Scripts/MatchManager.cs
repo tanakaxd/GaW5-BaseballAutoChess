@@ -140,19 +140,19 @@ public class MatchManager : MonoBehaviour
         if(totalRuns > totalEnemyRuns)
         {
             m_result.text = "WIN!"; 
-            m_money.ApplyChange(m_fame.Value);
-            m_fame.ApplyChange(1);
+            m_money.ApplyChange(3);
+            m_fame.ApplyChange(3);
 
         }else if(totalRuns == totalEnemyRuns)
         {
             m_result.text = "DRAW";
-            m_money.ApplyChange(m_fame.Value);
+            //m_money.ApplyChange(m_fame.Value);
         }
         else
         {
             m_result.text ="LOST";
-            m_money.ApplyChange(m_fame.Value);
-            m_fame.ApplyChange(-1);
+            //m_money.ApplyChange(m_fame.Value);
+            //m_fame.ApplyChange(-1);
         }
 
 

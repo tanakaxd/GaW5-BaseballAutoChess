@@ -3,9 +3,9 @@
 [CreateAssetMenu(fileName = "PlayerModel", menuName = "PlayerModel")]
 public class PlayerModel : ScriptableObject
 {
-    [SerializeField]private float average;
-    [SerializeField]private  float homerun;
-    [SerializeField] private float discipline;
+    public float average;
+    public float homerun;
+    public float discipline;
 
     public float GetAverage()
     {
@@ -28,6 +28,7 @@ public class PlayerModel : ScriptableObject
 
     public TypeOfSchool school;
     public TypeOfPlace place;
+
 
     public float GetGradeModifiler()
     {

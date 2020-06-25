@@ -7,6 +7,8 @@ public class ReplacedPlayer : MonoBehaviour, IDropHandler
     //public PlayerModelDataBase dataBase;
     public UnityEvent onOrderChanged;
 
+    public FloatVariable money;
+
     public void OnDrop(PointerEventData eventData)
     {
         Transform draggedCard = eventData.pointerDrag.transform;
@@ -47,6 +49,16 @@ public class ReplacedPlayer : MonoBehaviour, IDropHandler
         {
             DrawnPlayerController newPlayer = draggedCard.GetComponent<DrawnPlayerController>();
             PlayerController replacedPlayer = transform.GetComponent<PlayerController>();
+
+            if (newPlayer.cost > money.Value)
+            {
+                return;
+            }
+            else
+            {
+                money.ApplyChange(-newPlayer.cost);
+            }
+
 
             if (newPlayer.ID == replacedPlayer.ID)
             {

@@ -62,11 +62,12 @@ public class PlayerDisplay : MonoBehaviour
             case TypeOfSchool.none:
                 return Color.black;
             case TypeOfSchool.red:
-                return Color.red;
+                return new Color32(192, 57, 43,255);
             case TypeOfSchool.blue:
-                return Color.blue;
+                return new Color32(52, 152, 219, 255);
             case TypeOfSchool.green:
-                return Color.green;
+                return new Color32(39, 174, 96,255);
+
             default:
                 return Color.clear;
 

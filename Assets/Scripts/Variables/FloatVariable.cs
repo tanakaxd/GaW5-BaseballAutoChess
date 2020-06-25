@@ -5,6 +5,7 @@
 // Date:   10/04/17
 // ----------------------------------------------------------------------------
 
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -35,6 +36,14 @@ public class FloatVariable : ScriptableObject
     {
         Value += amount;
         OnValueChange?.Invoke();
+
+        //DOTween.To(
+        //    () => score,          // 何を対象にするのか
+        //    num => score = num,   // 値の更新
+        //    money.Value,                  // 最終的な値
+        //    1.0f                  // アニメーション時間
+        //);
+
     }
 
     public void ApplyChange(FloatVariable amount)

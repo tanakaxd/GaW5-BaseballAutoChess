@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DG.Tweening;
+using System;
 using UnityEngine;
 
 public class OrderManager : MonoBehaviour
@@ -126,7 +127,6 @@ public class OrderManager : MonoBehaviour
                     Debug.Log("school infinite loop avoided!" + (round >= 2 ? round : row));
                     break;
                 }
-                    
             }
         }
 
@@ -232,18 +232,44 @@ public class OrderManager : MonoBehaviour
     {
         for (int i = 0; i < indexes.Length; i++)
         {
+            RectTransform rect = order[indexes[i]].schoolRect;
+            Sequence seq = DOTween.Sequence().Append(rect.DOScale(
+                 new Vector2(1.2f, 1.2f),  //終了時点のScale
+                 0.5f       //時間
+             )).Append(rect.DOScale(
+                 new Vector2(1, 1),  //終了時点のScale
+                 0.5f       //時間
+             ));
+
+            //バラバラに書く方法
+            //Sequence seq = DOTween.Sequence();
+
+            //seq.Append(rect.DOScale(
+            //    new Vector2(1.2f, 1.2f),　　//終了時点のScale
+            //    0.5f 　　　　　　//時間
+            //));
+            //seq.Append(rect.DOScale(
+            //    new Vector2(1,1),　　//終了時点のScale
+            //    0.5f 　　　　　　//時間
+            //));
             switch (school)
             {
                 case TypeOfSchool.red:
                     order[indexes[i]].SetAuraForSchool(Color.black);
+                    seq.Play();
                     break;
 
                 case TypeOfSchool.blue:
+
                     order[indexes[i]].SetAuraForSchool(Color.black);
+                    seq.Play();
+
                     break;
 
                 case TypeOfSchool.green:
                     order[indexes[i]].SetAuraForSchool(Color.black);
+                    seq.Play();
+
                     break;
                 defalut:
                     break;
@@ -255,22 +281,33 @@ public class OrderManager : MonoBehaviour
     {
         for (int i = 0; i < indexes.Length; i++)
         {
+            RectTransform rect = order[indexes[i]].placeRect;
+            Sequence seq = DOTween.Sequence().Append(rect.DOScale(
+                 new Vector2(1.2f, 1.2f),  //終了時点のScale
+                 0.5f       //時間
+             )).Append(rect.DOScale(
+                 new Vector2(1, 1),  //終了時点のScale
+                 0.5f       //時間
+             ));
             switch (place)
             {
                 case TypeOfPlace.east:
                     order[indexes[i]].SetAuraForPlace(Color.black);
+                    seq.Play();
                     break;
 
                 case TypeOfPlace.west:
                     order[indexes[i]].SetAuraForPlace(Color.black);
+                    seq.Play();
                     break;
-
                 case TypeOfPlace.south:
                     order[indexes[i]].SetAuraForPlace(Color.black);
+                    seq.Play();
                     break;
 
                 case TypeOfPlace.north:
                     order[indexes[i]].SetAuraForPlace(Color.black);
+                    seq.Play();
                     break;
                 defalut:
                     break;

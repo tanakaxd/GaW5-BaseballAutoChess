@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79a05f603199ca44fa317dda0b0dfcfa, type: 3}
   m_Name: DefaultModel
   m_EditorClassIdentifier: 
-  average: 0.2
-  homerun: 0.02
+  average: 0.15
+  homerun: 0.01
   discipline: 0.02
   grade: 0
   ID: 0

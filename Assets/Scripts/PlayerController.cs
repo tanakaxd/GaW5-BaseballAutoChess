@@ -48,7 +48,8 @@ public class PlayerController : MonoBehaviour
     #endregion
 
     public UnityEvent onPlayerModelLoaded;
-
+    public RectTransform schoolRect;
+    public RectTransform placeRect;
 
     void Start()
     {
