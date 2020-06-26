@@ -13,6 +13,7 @@ public class MatchManager : MonoBehaviour
     public TextMeshProUGUI m_bottomTotalScore;
     public FloatVariable m_money;
     public FloatVariable m_fame;
+    public FloatVariable m_totalScores;
 
     public OrderManager m_orderManager;
 
@@ -160,6 +161,8 @@ public class MatchManager : MonoBehaviour
         {
             m_orderManager.order[i].stats.Refresh();
         }
+
+        m_totalScores.ApplyChange(totalRuns);
 
         
     }

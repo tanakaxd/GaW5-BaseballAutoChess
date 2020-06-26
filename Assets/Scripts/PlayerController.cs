@@ -17,9 +17,9 @@ public class PlayerController : MonoBehaviour
 
     public bool useRandomModel;
 
-    private float average;
-    private float homerun;
-    private float discipline;
+    　private float average;
+     private float homerun;
+     private float discipline;
 
     [HideInInspector] public float modifiedAverage;
     [HideInInspector] public float modifiedHomerun;
@@ -180,8 +180,20 @@ public class PlayerController : MonoBehaviour
             return;
 
         level++;
+
+        //レベル補正で内部値の書き換え
         UpdateLevelModifier();
+
+        //modifiedの方の書き換え
+        modifiedAverage = average;
+        modifiedHomerun = homerun;
+        modifiedDiscipline = discipline;
+
+        //星の数の表示
         display.UpdateLevel(level);
+
+
+        //schoolバフがあればその調整
         UpdateSchoolModifier();
         Debug.Log(level);
 

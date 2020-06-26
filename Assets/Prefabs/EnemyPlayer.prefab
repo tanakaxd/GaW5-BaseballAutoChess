@@ -584,7 +584,7 @@ MonoBehaviour:
     ConstantValue: 0
     Variable: {fileID: 11400000, guid: fbc69f5663bb7fd43ad5d5b3ac33d2b2, type: 2}
   fame: {fileID: 11400000, guid: a69069e8922aa7d4eb39c3ea79b0d3ff, type: 2}
-  useRandomModel: 1
+  useRandomModel: 0
   useRandomlyGenerated: 1
 --- !u!1 &4230763053548116720
 GameObject:

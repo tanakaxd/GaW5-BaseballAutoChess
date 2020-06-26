@@ -36,7 +36,7 @@ public class EnemyPlayerController : MonoBehaviour
     {
         if (useRandomlyGenerated)
         {
-            GenerateRandom(dataBase.GetRandomModelLower((int)Mathf.Clamp(fame.Value/10,1f,5f)));
+            GenerateRandom(dataBase.GetRandomModelLower((int)Mathf.Clamp(fame.Value/8,1f,5f)));
         }
         else if (useRandomModel)
         {

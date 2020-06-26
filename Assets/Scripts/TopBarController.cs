@@ -7,7 +7,7 @@ public class TopBarController : MonoBehaviour
     public TextMeshProUGUI matchesText, averageRunText, fameText, moneyText;
     private float currentMatches, currentFame, currentMoney;
     public IntVariable matches;
-    public FloatVariable fame, money;
+    public FloatVariable fame, money,totalScore;
 
     // Start is called before the first frame update
     private void Start()
@@ -20,6 +20,12 @@ public class TopBarController : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
+    }
+
+    public void RefreshAverageScore()
+    {
+        averageRunText.text = (totalScore.Value/matches.Value).ToString("n2");
+        Debug.Log("match");
     }
 
     public void RefreshMoney()

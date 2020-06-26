@@ -19,11 +19,11 @@ public class GameManager : MonoBehaviour
     public FloatVariable startingMoney;
     public FloatVariable fame;
     public FloatVariable startingFame;
+    public FloatVariable totalScore;
 
     public int consecutiveMatches;
     public bool reset;
 
-    private int totalScore;
     private List<int> scoreHistory;
     //private int totalEnemyScore;
 
@@ -39,7 +39,7 @@ public class GameManager : MonoBehaviour
         money.SetValue(startingMoney);
         fame.SetValue(startingFame);
         matches.SetValue(0);
-        totalScore = 0;
+        totalScore.SetValue(0);
     }
 
     public void SetActiveDrawPanel()
@@ -66,21 +66,28 @@ public class GameManager : MonoBehaviour
             }
         }
 
+        //平均スコアのため先にやる必要がある
+        matches.ApplyChange(consecutiveMatches);
+
+
         for (int i = 0; i < consecutiveMatches; i++)
         {
             //innning by innning version
             StartCoroutine(matchManager.ExcuteMatch());
+            //ここではcoroutineを開始しているだけで、処理の中断はない
+            //つまり、これより↓のコードはすぐに実行されてしまう
+
             //scoreHistory.Add(matchManager.totalRuns);
-            totalScore += matchManager.totalRuns;
+            //Debug.Log(matchManager.totalRuns);
+           // totalScore.ApplyChange(matchManager.totalRuns);
 
 
             //instant version
             //scoreHistory.Add(matchManager.ExcuteMatch());
         }
 
-        matches.ApplyChange(consecutiveMatches);
 
-        avgScore.text = ((float)totalScore / matches.Value).ToString("n2");
+        //avgScore.text = ((float)totalScore.Value / matches.Value).ToString("n2");
     }
 
 }

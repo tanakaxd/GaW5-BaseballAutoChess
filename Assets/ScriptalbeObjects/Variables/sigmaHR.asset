@@ -13,4 +13,7 @@ MonoBehaviour:
   m_Name: sigmaHR
   m_EditorClassIdentifier: 
   DeveloperDescription: 
-  Value: 0.05
+  Value: 0.09
+  OnValueChange:
+    m_PersistentCalls:
+      m_Calls: []
